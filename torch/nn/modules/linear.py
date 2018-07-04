@@ -151,8 +151,10 @@ class FiLM(Module):
     """
     
     def forward(self, input, gammas, betas):
-        dims = [-1, input.size(1)] + [1] * (input.dim() - 2)
-        return gammas.view(dims) * input + betas.view(dims)
+        for _ in range(input.dim() - 2):
+            gammas = gammas.unsqueeze(-1)
+            betas = betas.unsqueeze(-1)
+        return gammas * input + betas
     
     
 # TODO: PartialLinear - maybe in sparse?
